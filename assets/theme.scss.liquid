@@ -5412,16 +5412,14 @@ h1.product-single__title { color:{{ settings.color_product_title}}; font-size:23
         .imageCol { padding-bottom:25px; }
         
         li.lvl-1 { margin-bottom:25px;
-          a.lvl-1 { color:{{ settings.nav_mm_title }}; font-size:{{settings.nav_ttl}}px; text-transform:{{settings.nav_case}}; padding:0 0 8px; font-weight:400;
-                &:hover { color:{{ settings.nav_mm_link_hv }}; }
-                &:active { font-size: 20px;
-                  font-weight: 700}
+          a.lvl-1 { color:{{ settings.nav_mm_title }}; font-size:{{settings.nav_ttl}}px; text-transform:{{settings.nav_case}}; padding:0 0 8px; font-weight:600;
+                &:hover { color:{{ settings.nav_mm_link_hv }}; &:active { font-size: 60px; font-weight: 700} }
             img {margin-bottom:10px;}
             .title { display:block; }
           }
 
           li {
-            .site-nav { color:{{ settings.nav_mm_link }}; padding:5px 0; font-weight:700;
+            .site-nav { color:{{ settings.nav_mm_link }}; padding:5px 0; font-weight:400;
               &:before { content:""; display:inline-block; width:0px; height:2px; vertical-align:middle;
                 background-color:{{ settings.nav_mm_link_hv }}; @include transition(all 0.3s ease-in-out);              
               }
