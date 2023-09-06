@@ -1,0 +1,45 @@
+{%- if section.blocks.size > 0 -%}
+    <ul id="siteNav" class="site-nav {{ settings.font-weight}} {{ section.settings.menuAlign}}{% if section.settings.menuarrow == false %} hidearrow{% endif %}">
+    {% for block in section.blocks %}
+      	{%- assign label = block.settings.title |  split: '[label' | last  | split: ']' | first | prepend: "nm_label" -%}
+      	{%- capture linkLevel1 -%}<a href="{% if block.settings.url != blank %}{{ block.settings.url }}{% else %}#{% endif %}">{{ block.settings.title | split: '[label' | first }} <i class="ad ad-angle-down-l"></i>{% if block.settings.title contains '[label' %}<span class="lbl {{label}}">{{ section.settings[label] }}</span>{% endif %}</a>{%- endcapture -%}
+      	{%- case block.type -%}
+			
+            {%- when 'wholesalesingle_link' -%}
+              
+      			<li class="lvl1">{{linkLevel1 | replace: '<i class="ad ad-angle-down-l"></i>','' }}</li>
+			  
+      		
+      		  {%- when 'wholesalemegamenu1' -%}
+      			
+      			{%- if block.settings.title != blank -%}
+                  <li class="lvl1 parent megamenu{% if block.settings.custom_size %} ctsize{% endif %}">{{linkLevel1}}
+                      <div class="megamenu style1{% if block.settings.custom_size %} {{block.settings.mm_align}}{% else %} mmfull{% endif %}"{% if block.settings.custom_size %} style="width:{{block.settings.mm_size}}px;"{% endif %}>
+                        <ul class="grid mmWrapper">
+                            {%- assign firstcolumn = 'large-up--three-fifths' -%}
+                          	{%- assign othercolumn = 'large-up--one-fifth' -%}
+                            {%- if block.settings.megamenu1_product == blank and block.settings.megamenu1_image == blank -%}
+                                {% assign firstcolumn = 'large-up--one-whole' %}
+                            {%- elsif block.settings.megamenu1_product == blank or block.settings.megamenu1_image == blank -%}
+                                {% assign firstcolumn = 'large-up--three-quarters' %}
+                          		{% assign othercolumn = 'large-up--one-quarter' %}
+                            {%- endif -%}
+                            <li class="grid__item {{ firstcolumn }}"><ul class="grid">{% for link in linklists[block.settings.mm_linklist].links %}{% include 'mm-links' %}{% endfor %}</ul></li>
+                            {%- if block.settings.megamenu1_product != blank -%}
+                                <li class="grid__item {{othercolumn}} productCol lvl-1 grid-products">
+                                    <a class="site-nav lvl-1">{{ block.settings.product_ttl }}</a>
+                                    {%- assign product = all_products[block.settings.megamenu1_product] -%}
+                                    {% include 'mm-product' %}
+                                </li>
+                            {%- endif -%}
+                            {%- if block.settings.megamenu1_image != blank -%}<li class="grid__item {{othercolumn}} imageCol"><a href="{{ block.settings.Image1url}}"><img class="lazyload" src="{{ 'spacer.png' | asset_img_url: '5x'}}" data-src="{{ block.settings.megamenu1_image | img_url: '450x' }}" alt="" /></a></li>{%- endif -%}
+                        </ul>
+                      </div>
+                  </li>
+              {%- endif -%}
+               
+      
+      	{%- endcase -%}
+    {%- endfor -%}
+    </ul>
+{%- endif -%}

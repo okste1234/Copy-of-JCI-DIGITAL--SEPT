@@ -1,0 +1,43 @@
+{%- if section.blocks.size > 0 -%}
+<div class="mobile-nav-wrapper" role="navigation">
+  <div class="closemobileMenu"><i class="ad ad-times-circle pull-right" aria-hidden="true"></i> {{ 'general.accessibility.close_menu' | t}}</div>
+    <ul id="MobileNav" class="mobile-nav">
+    {%- for block in section.blocks -%}
+      	{%- assign label = block.settings.title |  split: '[label' | last  | split: ']' | first | prepend: "nm_label" -%}
+      	{%- capture linkLevel1 -%}<a href="{% if block.settings.url != blank %}{{ block.settings.url }}{% else %}#{% endif %}">{{ block.settings.title | split: '[label' | first }}{% if block.settings.title contains '[label' %} <span class="lbl {{label}}">{{ section.settings[label] }}</span>{% endif %} <i class="ad ad-plus-l"></i></a>{%- endcapture -%}
+     
+        {%- if block.type == 'wholesalesingle_link' -%}
+          
+      		{%- assign singlelabel = block.settings.title |  split: '[label' | last  | split: ']' | first | prepend: "nm_label" -%}
+      		<li class="lvl1">{{linkLevel1 | replace: '<i class="ad ad-plus-l"></i>',''}}</li>
+          
+        {%- endif -%}
+        {%- if block.type == 'wholesalemegamenu1' -%}
+         
+      		{%- if block.settings.title != blank -%}<li class="lvl1 parent megamenu">{{linkLevel1}}<ul>{% for link in linklists[block.settings.mm_linklist].links %}{% include 'mm-mobile-links' %}{% endfor %}</ul></li>{%- endif -%}
+          
+        {%- endif -%}
+      
+    {%- endfor -%}
+      <li>  {%- if settings.show_multiple_currencies -%}
+        <div class="currency-picker">
+          <span class="mbl-ttl">{{ settings.mbl_lbl_crn}}</span>
+          {%- assign codes = 'USD,EUR,GBP,CAD,ARS,AUD,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,ILS,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK' | split: ',' -%}
+          {%- assign supported_codes = settings.supported_currencies | split: ' ' -%}	
+          <ul id="currencies">{% for code in supported_codes %}{%- if codes contains code -%}<li data-currency="{{ code }}" class="{% if shop.currency == '{{ code }}' %}selected {% endif %}">{{ code }}</li>{%- endif -%}{% endfor %}</ul>
+        </div>
+        {%- endif -%}
+        {% if settings.show_language %}
+        <div class="language-picker">  
+           <span class="mbl-ttl">{{ settings.mbl_lbl_lang}}</span>
+          <ul id="language" class="cnrLangList">
+            {% for link in linklists[settings.languages].links %}
+            <li><a href="{{ link.url }}">{{ link.title | split: '[' | first }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </li>
+    </ul>
+</div>
+{%- endif -%}

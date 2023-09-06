@@ -1,0 +1,186 @@
+{%- assign sold_out = true -%} 
+{%- if product.available -%}{%- assign sold_out = false -%}{%- endif -%}
+{%- assign variantCount = product.variants | size -%}
+
+{%- assign product_box = forloop.index | minus:1 -%}
+{%- assign delay_time = 50 | times : product_box -%}
+{%- assign img_url = product.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+{%- assign img_url1 = product.images[1] | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+{%- assign quickViewUrl = product.url | within: collection | split: "?" | first -%}
+
+{% capture productLables %}
+	{%- if settings.pr_lbl -%}
+	<div class="product-labels {{ settings.select_label_style }}">
+    	{%- if product.compare_at_price > product.price and settings.sale_lbl -%}
+        	{% if settings.sale_label_style == "salelabel" %}
+        		<label class="lbl on-sale">{{ 'products.product.on_sale' | t}}</label>
+        	{% else %}
+        		<label class="lbl on-sale">-{{ product.compare_at_price_min | minus: product.price | times: 100 | divided_by: product.compare_at_price_min }}%</label>
+        	{% endif %}
+      {%- endif -%}
+      {%- if product.tags contains settings.pr_label1 -%}<label class="lbl pr-label1">{{settings.pr_label1}}</label>{%- endif -%}
+      {%- if product.tags contains settings.pr_label2 -%}<label class="lbl pr-label2">{{settings.pr_label2}}</label>{%- endif -%}
+      {%- if product.tags contains settings.pr_label3 -%}<label class="lbl pr-label3">{{settings.pr_label3}}</label>{%- endif -%}
+	</div>
+	{%- endif -%}
+{% endcapture %}
+{% capture soldOut %}
+	{%- if sold_out -%}<label class="sold-out"><span>{{ 'products.product.sold_out' | t}}</span></label>{%- endif -%}
+{% endcapture %}
+
+{% capture cartBtn %}
+	{%- unless sold_out -%}
+		{%- if settings.show_cart_btn and settings.catalog-mode == false -%}
+        	<form class="variants add" action="/cart/add" method="post">
+              	{%- if section.settings.gridstyle == 'style1' -%}
+                  {%- if variantCount > 1 -%}
+                      {% if settings.enable_quickshop %}
+                          <a class="btn btn-options quickShop" href="{{ product.url | within: collection }}?view=json">{{ 'products.product.quick_shop' | t}}</a>
+                      {% else %}
+                           <a class="btn btn-options" href="{{ product.url | within: collection }}">{{ 'products.product.select_options' | t}}</a>                  	
+                      {% endif %}
+                  {%- else -%}
+                      <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+                      <button type="button" id="{{ product.variants[0].id }}" rel="1" class="btn add-to-cart">{{ 'products.product.add_to_cart' | t}}</button>
+                  {%- endif -%}
+              	{%- else -%}
+              		{%- if variantCount > 1 -%}
+                        {% if settings.enable_quickshop %}
+              				<a class="btn cartIcon quickShop" href="{{ product.url | within: collection }}?view=json" title="{{ 'products.product.quick_shop' | t}}"><i class="ad ad-bag-l" aria-hidden="true"></i></a>
+                        {% else %}
+                            <a class="btn cartIcon btn-options" href="{{ product.url | within: collection }}" title="{{ 'products.product.select_options' | t}}"><i class="ad ad-bag-l" aria-hidden="true"></i></a>                  	
+                        {% endif %}
+                    {%- else -%}
+                        <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+              			<button type="button" id="{{ product.variants[0].id }}" rel="1" class="btn cartIcon add-to-cart" title="{{ 'products.product.add_to_cart' | t}}"><i class="ad ad-bag-l" aria-hidden="true"></i></button>
+                    {%- endif -%}
+              	{%- endif -%}
+			</form>
+		{%- endif -%}
+	{%- endunless -%}
+{% endcapture %}
+
+{% capture buttonset %}
+<div class="button-set">
+	{%- if settings.quick_view -%}<a href="{{ quickViewUrl }}?view=quick_view" title="{{ 'products.product.quick_view' | t}}" class="quick-view" rel="nofollow"><i class="ad ad-search-plus-r"></i></a>{%- endif -%}
+    {%- include 'wishlist' -%}
+</div>
+{% endcapture %}
+
+{%- assign meta = product.metafields.meta -%}
+{%- assign key = 'countdown' -%}
+{% capture productTimer %}
+	{%- if settings.display_countdown and meta.countdown != blank -%}
+  	<div class="saleTime desktop" data-date="{{meta.countdown}}"><span class="counter"></span></div>
+	{%- endif -%}
+{% endcapture %}
+{% capture productTimerMobile %}
+	{%- if settings.display_countdown and meta.countdown != blank -%}
+	<div class="timermobile"><div class="saleTime" data-date="{{meta.countdown}}"><span class="counter"></span></div></div>
+	{%- endif -%}
+{% endcapture %}
+
+<div class="grid-view-item {{section.settings.gridstyle}}{% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %} wow fadeIn" data-wow-delay="{{delay_time}}ms">
+  	{%- if section.settings.gridstyle == 'style1' or gridStyle == 'style1' -%}
+        <div class="grid-view_image">
+          
+          {% capture the_snippet_fave_icon %}{% render 'ssw-widget-faveicon' with product.id %}{% endcapture %}
+          {% unless the_snippet_fave_icon contains 'Liquid error' %}
+          {{ the_snippet_fave_icon }}
+          {% endunless %}    
+          
+            <a class="grid-view-item__link" href="{{ product.url | within: collection }}">    
+                <img class="grid-view-item__image lazyload{% if product.images.size > 1 %} primary{% endif %}" src="{{ product.featured_image | img_url: '100x' }}" width="100" data-src="{{ img_url }}" data-widths="[100,200, 320,420,560,760]" data-aspectratio="{{ product.featured_image.aspect_ratio }}" data-sizes="auto" alt="{{ product.featured_image.alt | escape }}" />
+                {%- if settings.secondary_image and product.images.size > 1 -%}
+                    <img class="grid-view-item__image lazyload hover" src="{{ 'spacer.png' | asset_img_url: '5x'}}" width="100" data-src="{{ img_url1 }}" data-widths="[100,200,300,420,560,760]" data-aspectratio="{{ product.images[1].aspect_ratio }}" data-sizes="auto" alt="{{ product.images[1].alt | escape }}" />
+                {%- endif -%}
+                <i class="ad ad-spinner4 ad-spin loading"></i>
+                {%- if settings.show_color_swatch -%}<img src="{{ 'spacer.png' | asset_img_url: '5x'}}" class="grid-view-item__image hover variantImg" alt="" />{%- endif -%}
+                {{productLables}} {{soldOut}}
+            </a>
+            {{cartBtn}} {{buttonset}} {{ productTimer}}
+            {% if settings.enable_quickshop %}<div class="shopWrapper"></div>{% endif %}
+         </div>
+  		
+        {%- if section.settings.show_vendor -%}<div class="grid-view-item__vendor">{{ product.vendor | link_to_vendor }}</div>{%- endif -%}
+        <a class="grid-view-item__title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+        {%- unless settings.catalog-mode -%}<div class="grid-view-item__meta">{%- include 'product-price' -%}</div>{%- endunless -%}
+        {%- if section.settings.show_product_review -%}<div class="product-review"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{%- endif -%}
+        {%- if settings.show_color_swatch -%}{% include 'product-swatches' %}{%- endif -%}
+  		{{productTimerMobile}}
+  	{%- endif -%}
+
+  	{%- if section.settings.gridstyle == 'style2' -%}
+        <div class="grid-view_image">
+            <a class="grid-view-item__link" href="{{ product.url | within: collection }}">
+                <img class="grid-view-item__image lazyload{% if product.images.size > 1 %} primary{% endif %}" src="{{ product.featured_image | img_url: '100x' }}" width="100" data-src="{{ img_url }}" data-widths="[100,200, 320,420,560,760]" data-aspectratio="{{ product.featured_image.aspect_ratio }}" data-sizes="auto" alt="{{ product.featured_image.alt | escape }}" />
+                {%- if settings.secondary_image and product.images.size > 1 -%}
+                    <img class="grid-view-item__image lazyload hover" src="{{ 'spacer.png' | asset_img_url: '5x'}}" data-src="{{ img_url1 }}" width="100" data-widths="[100,200,300,420,560,760]" data-aspectratio="{{ product.images[1].aspect_ratio }}" data-sizes="auto" alt="{{ product.images[1].alt | escape }}" />
+                {%- endif -%}
+                <img src="{{ 'spacer.png' | asset_img_url: '5x'}}" class="grid-view-item__image hover variantImg" alt="" />
+                {%- if settings.pr_lbl -%}{{productLables}}{%- endif -%}
+                {{ productTimer}}
+              	{{soldOut}}
+            </a>
+          	<i class="ad ad-spinner4 ad-spin loading"></i>
+
+			<div class="hoverDetails">
+                {%- if section.settings.show_vendor -%}<div class="grid-view-item__vendor">{{ product.vendor | link_to_vendor }}</div>{%- endif -%}
+                <a class="grid-view-item__title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                {%- unless settings.catalog-mode -%}<div class="grid-view-item__meta">{%- include 'product-price' -%}</div>{%- endunless -%}
+                {%- if section.settings.show_product_review -%}<div class="product-review"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{%- endif -%}
+                <div class="button-set">
+                    {%- if settings.quick_view -%}<a href="{{ quickViewUrl }}?view=quick_view" title="{{ 'products.product.quick_view' | t}}" class="quick-view" rel="nofollow"><i class="ad ad-search-plus-r"></i></a>{%- endif -%}
+                    {{cartBtn}}
+                  	{%- include 'wishlist' -%}
+                </div>              
+          	</div>
+          	{% if settings.enable_quickshop %}<div class="shopWrapper"></div>{% endif %}
+        </div>
+  		<div class="hoverDetails mobile">
+                {%- if section.settings.show_vendor -%}<div class="grid-view-item__vendor">{{ product.vendor | link_to_vendor }}</div>{%- endif -%}
+                <a class="grid-view-item__title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                {%- unless settings.catalog-mode -%}<div class="grid-view-item__meta">{%- include 'product-price' -%}</div>{%- endunless -%}
+                {%- if section.settings.show_product_review -%}<div class="product-review"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{%- endif -%}
+                <div class="button-set">
+                    {%- if settings.quick_view -%}<a href="{{ product.url | within: collection }}?view=quick_view" title="{{ 'products.product.quick_view' | t}}" class="quick-view" rel="nofollow"><i class="ad ad-search-plus-r"></i></a>{%- endif -%}
+                    {{cartBtn}}
+                  	{%- include 'wishlist' -%}
+                </div>              
+          	</div>
+  
+  		{%- if settings.show_color_swatch -%}{% include 'product-swatches' %}{%- endif -%}
+  		 {{productTimerMobile}}
+  	{%- endif -%}
+  	{%- if section.settings.gridstyle == 'style3' -%}
+  		<a class="grid-view-item__title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+        <div class="grid-view_image">
+            <a class="grid-view-item__link" href="{{ product.url | within: collection }}">    
+                <img class="grid-view-item__image lazyload{% if product.images.size > 1 %} primary{% endif %}" src="{{ product.featured_image | img_url: '100x' }}" width="100" data-src="{{ img_url }}" data-widths="[100,200, 320,420,560,760]" data-aspectratio="{{ product.featured_image.aspect_ratio }}" data-sizes="auto" alt="{{ product.featured_image.alt | escape }}" />
+                {%- if settings.secondary_image and product.images.size > 1 -%}
+                    <img class="grid-view-item__image lazyload hover" src="{{ 'spacer.png' | asset_img_url: '5x'}}" data-src="{{ img_url1 }}" width="100" data-widths="[100,200,300,420,560,760]" data-aspectratio="{{ product.images[1].aspect_ratio }}" data-sizes="auto" alt="{{ product.images[1].alt | escape }}" />
+                {%- endif -%}
+                <i class="ad ad-spinner4 ad-spin loading"></i>
+                <img src="{{ 'spacer.png' | asset_img_url: '5x'}}" class="grid-view-item__image hover variantImg" alt="" />
+
+                {%- if settings.pr_lbl -%}{{productLables}}{%- endif -%}
+            {{ productTimer}}
+           {{soldOut}}
+          </a>
+          <i class="ad ad-circle-o-notch ad-spin loading"></i>
+          {%- if settings.show_color_swatch -%}<img src="" class="grid-view-item__image hover variantImg" alt="" />{%- endif -%}
+          {%- if settings.enable_quickshop -%}<div class="shopWrapper"></div>{%- endif -%}
+		</div>
+  		<div class="button-set">
+          	{%- if settings.quick_view -%}<div class="quckOuter"><a href="{{ quickViewUrl }}?view=quick_view" title="{{ 'products.product.quick_view' | t}}" class="quick-view"><i class="ad ad-search-plus-r"></i></a></div>{%- endif -%}
+            {{cartBtn}}
+            {%- include 'wishlist' -%}
+		</div>
+  
+		{%- if settings.show_color_swatch -%}{% include 'product-swatches' %}{%- endif -%}
+		{%- unless settings.catalog-mode -%}<div class="grid-view-item__meta">{%- include 'product-price' -%}</div>{%- endunless -%}
+		{%- if section.settings.show_product_review -%}<div class="product-review"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{%- endif -%}
+        {%- if section.settings.show_vendor -%}<div class="grid-view-item__vendor">{{ product.vendor | link_to_vendor }}</div>{%- endif -%}
+  		 {{productTimerMobile}}
+  	{%- endif -%}
+</div>

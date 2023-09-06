@@ -1,0 +1,43 @@
+<div class="page-width wow fadeIn" data-wow-delay="100ms" data-section-id="{{ section.id }}" data-section-type="instagram" data-get="{{ section.settings.instagram_get}}" data-image="{{ section.settings.images_size }}"
+     data-count="{{ section.settings.limit }}" data-tags="{{ section.settings.instagram_tag }}" data-user="{{ section.settings.user-id }}" data-token="{{ section.settings.accessToken }}">
+  {%- if section.settings.title != blank  or section.settings.subtitle != blank -%}
+  <div class="section-header text-center wow fadeIn">
+    <h2 class="h2">{{ section.settings.title | escape }}</h2>  
+    {%- if section.settings.subtitle != blank -%}<p>{{section.settings.subtitle}}</p>{% endif %}
+  </div>
+  {%- endif -%}
+  {{ section.settings.js_code}} 
+</div>
+
+{% schema %}
+  {
+    "name": "Instagram Shop",
+    "class":"index-section",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Title",
+        "default": "Instagram Shop"
+      },	 
+      {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Description",
+        "default": "Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom."
+      },
+	 {
+        "type": "textarea",
+        "id": "js_code",
+        "label": "Paste Grid gallery code from snapppt",
+        "info": "Find grid gallery code from [Shoppable galleries](https://snapppt.com/embeds)"
+      }	
+    ],   
+    "presets": [
+      {
+        "name": "Instagram Shop",
+        "category": "Image"       
+      }
+    ]
+  }
+{% endschema %}

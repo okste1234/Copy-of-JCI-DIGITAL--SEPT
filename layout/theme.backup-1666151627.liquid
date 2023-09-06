@@ -1,0 +1,273 @@
+<!doctype html>
+<!--[if IE 9]> <html class="ie9 no-js" lang="{{ shop.locale }}" {% if settings.rtl %}dir="rtl"{% endif %}> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{ shop.locale }}" {% if settings.rtl %}dir="rtl"{% endif %}> <!--<![endif]-->
+<head><link id="TW_LINK" href="https://css.twik.io/633925942b1c7.css" onload="window.TWIK_SB && window.TWIK_SB()" rel="stylesheet"/><script>!function(){window.TWIK_ID="633925942b1c7",localStorage.tw_init=1;var t=document.documentElement;if(window.TWIK_SB=function(){t.style.visibility="",t.style.opacity=""},window.TWIK_RS=function(){var t=document.getElementById("TW_LINK");t&&t.parentElement&&t.parentElement.removeChild(t)},setTimeout(TWIK_RS,localStorage.tw_init?2e3:6e3),setTimeout(TWIK_SB,localStorage.tw_init?250:1e3),document.body)return TWIK_RS();t.style.visibility="hidden",t.style.opacity=0}();</script><script id="TW_SCRIPT" onload="window.TWIK_SB && window.TWIK_SB()" src="https://cdn.twik.io/tcs.js"></script>{% render 'pagefly-head' %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <meta name="google-site-verification" content="9fq56N8MG3vQcCD_cKd73tKIVjcGm7zLycF3vMQYiCM" />
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- if settings.favicon != blank -%}<link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">{%- endif -%}
+
+  {%- capture seo_title -%}
+    {{ page_title }}
+  	{%- if current_tags %}{%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}{%- endif -%}
+    {%- if current_page != 1 %}&ndash; {{ 'general.meta.page' | t: page: current_page }}{%- endif -%}
+    {%- unless page_title contains shop.name %}&ndash; {{ shop.name }}{%- endunless -%}
+  {%- endcapture -%}
+  
+<!-- Added by AVADA SEO Suite -->
+{% include 'avada-seo' %}
+<!-- /Added by AVADA SEO Suite -->
+<title>{{ seo_title }}</title>
+  {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
+  {% include 'social-meta-tags' %}
+  
+  <!-- main js -->
+  <!--[if (lte IE 9) ]>{{ 'match-media.min.js' | asset_url | script_tag }}<![endif]-->
+  <script src="{{ 'jquery.min.js' | asset_url }}" type="text/javascript"></script>
+  
+  <!-- css -->
+  {% include 'head-css' %}
+  {% if settings.rtl %}{{ 'theme-rtl.scss.css' | asset_url | stylesheet_tag }}{% else %}{{ 'theme.scss.css' | asset_url | stylesheet_tag }}{% endif %}
+
+  <!--[if (gt IE 9)|!(IE)]><!--><script src="{{ 'api.jquery.js' | shopify_asset_url }}" defer="defer"></script><!--<![endif]-->
+  <!--[if lte IE 9]><script src="{{ 'api.jquery.js' | shopify_asset_url }}"></script><![endif]-->
+  
+  <script>
+    var theme = {
+      strings: {
+        addToCart: {{ 'products.product.add_to_cart' | t | json }},
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+        showMore: {{ 'general.filters.show_more' | t | json }},
+        showLess: {{ 'general.filters.show_less' | t | json }}
+      },
+      moneyFormat: {{ shop.money_format | json }}
+    }
+	theme.rtl = {{ settings.rtl }};
+    theme.mlcurrency = {{ settings.show_multiple_currencies }};
+    theme.shopCurrency = {{ shop.currency | json }};
+    theme.currencyFormat = {{ settings.currency_format | json }};
+    theme.moneyCurrencyFormat = {{ shop.money_with_currency_format | strip_html | json }};
+    theme.ajax_cart = {{settings.ajax_cart }};
+    theme.fixedHeader = {{settings.show_sticky_header }};
+    theme.animation = {{settings.enable_site_animation }};
+    theme.animationMobile = {{settings.site_animation_mobile }};
+    theme.allresult = {{ 'general.search.all' | t | json }};
+      
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+  </script>
+
+  {%- if template.directory == 'customers' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  <script src="{{ 'vendor.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'option_selection.js' | shopify_asset_url }}" async></script>
+
+  {{ content_for_header }}
+{%- render 'bold-options-hybrid' -%}
+{%- render 'bold-common' -%}
+{% if template == 'product' and product.metafields.inventory.ShappifyHidden or product.type contains '_HIDDEN_' %}<meta name='robots' content='noindex'>{% endif %}
+  {%- if settings.show_language -%}{% render 'weglot_hreftags' %}{%- endif -%}
+{% include 'wsg-header' %}
+{% render 'wsg-exclusions' %}
+{% render 'wsg-custom' %}
+{{ 'zify-faq.css' | asset_url | stylesheet_tag }}
+</head>
+
+<body class="template-{{ template | split: '.' | first }}{%if settings.rtl %} rtl{% endif %}" data-localization-country-code="{{localization.country.iso_code}}">
+{% capture the_snippet_content %}{% render 'socialshopwave-helper' %}{% endcapture %}
+            {% unless the_snippet_content contains 'Liquid error' %}
+              {{ the_snippet_content }}
+            {% endunless %}
+  {%- if settings.enable_age_varification -%}{% include 'age-check' %}{%- endif -%}
+
+{%- comment -%}****	if boxed layout - div start **** {%- endcomment -%}
+{%- if settings.layout_style == "boxedlayout" -%}<div class="layout-boxed">{%- endif -%}
+  
+  {% section 'header' %}
+ 	
+    {% if settings.top-information-bar %}  
+  		{% section 'top-information-bar' %}
+    {% endif %}
+    
+  <div class="page-container" id="PageContainer">
+     <main class="main-content" id="MainContent" role="main">{{ content_for_layout }}</main>
+  </div>
+  {% section 'footer' %}
+{%- comment -%}****	if boxed layout - div end **** {%- endcomment -%}
+{%- if settings.layout_style == "boxedlayout" -%}</div>{%- endif -%}
+
+  <!-- js -->
+  {%- if settings.show_multiple_currencies -%}{% include 'currencies' %}{%- endif -%}
+  {%- if settings.show_language -%}{% render 'weglot_switcher' %}{%- endif -%}
+  {%- if settings.enable_site_animation -%}<script src="{{ 'wow.min.js' | asset_url }}" defer></script>{%- endif -%}
+  {%- if content_for_layout contains 'data-stellar-background-ratio' -%}<script src="{{ 'stellar.js' | asset_url }}" defer></script>{%- endif -%}
+  {%- if content_for_layout contains 'grid-masonary' -%}<script src="{{ 'masonry.js' | asset_url }}" defer="defer"></script>{%- endif -%}
+  <script src="{{ 'theme.min.js' | asset_url }}" defer="defer"></script>
+  
+    <!-- Snowfall Effect -->
+    
+ {% if template == 'index' %}
+    
+ {%- if settings.christmas and settings.christmas_style == "style1" -%}
+    <script src="{{ 'snowfall.jquery.js' | asset_url }}" async></script>
+     <script type="text/javascript">
+    	$(document).snowfall({deviceorientation : true, round : true, minSize: 1, maxSize:8,  flakeCount : 200});
+     </script>
+ {%- endif -%}
+
+ {%- if settings.christmas -%}
+    {{ 'jquery.flurry.min.js' | asset_url | script_tag }}
+     <script type="text/javascript">
+
+    {% if settings.christmas_style == "style2" %}
+    	$('body').flurry({
+    		 height: 500,
+             color: "#fff",
+            small: 8,
+        	large: 20,
+        });
+    {% endif %}
+    
+     {% if settings.christmas_style == "style3" %}     
+    	$('body').flurry({
+        character: '❄❅❆*⛄☃',
+        height: 500,       
+        large: 25,
+        small: 4,
+         frequency: 200
+      });
+    {% endif %}
+
+     {% if settings.christmas_style == "style4" %}
+    	$('body').flurry({
+        character: "~",
+        color: ["#FF0000", "#AE3D63", "#DB3853", "#F45C44", "#F8B646","#FFF"],
+        speed: 3000,
+        height: 680,
+        frequency: 200, // animation quantity
+        small: 12,
+        large: 40,
+        rotation: 90,
+        rotationVariance: 20,
+        startRotation: 90,
+        wind: 10,
+        windVariance: 100,
+        opacityEasing: "cubic-bezier(1,0,.96,.9)"
+      });
+    {% endif %}
+    
+    </script>
+   {%- endif -%} 
+ {% endif %}   
+ <!-- End Snowfall Effect --> 
+    
+  {%- comment -%}**** show Scroll to top button **** {%- endcomment -%}
+  {%- if settings.show_sticky_arrow -%}<span id="site-scroll"><i class="ad ad-angle-up-r" aria-hidden="true"></i></span>{%- endif -%}
+  
+  {%- comment -%}**** All PopUp **** {%- endcomment -%}
+  {% include 'theme-modals' %}
+
+  
+
+  
+
+  {% if template == 'product' %}
+
+  <script>
+    if (typeof sswRun == 'function') {
+      sswRun(function() {
+        var faveInt = setInterval(function() {
+          if (ssw('#multivariants_add_to_cart_button').length) {
+            ssw('#multivariants_setbox_footer').before(ssw('<div id="widget-fave-html"></div>'));
+            if(typeof sswWidgetFaveInterval == 'undefined'){
+              var sswWidgetFaveInterval = setInterval(function(){
+                if(typeof userChecked != 'undefined' && userChecked){
+                  clearInterval(sswWidgetFaveInterval);
+                  var data = {
+                    'module': 'feed',
+                    'name': 'fave',
+                    'product_id': {{ product.id }},
+                      'variant_id': {{ product.selected_or_first_available_variant.id }},
+                        'first_variant_id': {{ product.variants.first.id }},
+                          '_sid': sswCookie('hesid'),
+                            'hash_key': sswCookie('hash_key'),
+                              'page' : 'product'
+                };
+                if (sswCookie('mail_id')) {
+                  data.resource_id = sswCookie('mail_id');
+                  data.resource_type = 'mail';
+                }
+                ssw.get(sswProxyUrl + '/lite2/core/widget/index', data, function(response){
+                  ssw('#widget-fave-html').html(response);
+                  if(response)
+                    window._sswFaveNotSync = true;
+                });
+              }
+                                                      }, 300);
+            }
+            clearInterval(faveInt);
+          }
+        }, 1000);
+      });
+    }
+  </script>
+
+  {% endif %}
+
+
+  
+  {% render "gw-custom-scripts" %}
+<script src='{{ 'zify-faq.js' | asset_url }}' defer='defer'></script>
+</body>
+</html>
+
+<!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+<script type="text/javascript">
+// Overrides:
+// var afterpay_min = 0.04;            // As per your Afterpay contract.
+// var afterpay_max = 2000.00;         // As per your Afterpay contract.
+// var afterpay_cbt_enabled = false;   // As per your Afterpay contract; change to true to display Cross-Border Trade artwork (for AU/NZ).
+// var afterpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+// var afterpay_product_selector = '#product-price-selector';
+// var afterpay_cart_integration_enabled = true;
+// var afterpay_cart_static_selector = '#cart-subtotal-selector';
+
+// Non-editable fields:
+var afterpay_shop_currency = {{ shop.currency | json }};
+var afterpay_cart_currency = {{ cart.currency.iso_code | json }};
+var afterpay_shop_money_format = {{ shop.money_format | json }};
+var afterpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+var afterpay_theme_name = {{ theme.name | json }};
+var afterpay_product = {{ product | json }};
+var afterpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+var afterpay_cart_total_price = {{ cart.total_price | json }};
+var afterpay_js_snippet_version = '1.0.9';
+</script>
+<script type="text/javascript" src="https://static.afterpay.com/shopify-afterpay-javascript.js"></script>
+<!-- End Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+
+<!-- GeoLocation -->
+<script type="text/javascript">
+  var req = new XMLHttpRequest();
+  req.overrideMimeType("application/json");
+  req.open('GET', '/browsing_context_suggestions.json', true);
+  req.onload  = function() {
+    var jsonResponse = JSON.parse(req.responseText);
+    document.body.setAttribute('data-country-handle', jsonResponse.detected_values.country.handle);
+    document.body.setAttribute('data-country-name', jsonResponse.detected_values.country.name);
+  };
+  req.send(null);
+</script>

@@ -1,0 +1,178 @@
+{%- capture collectionBanner -%}
+<div class="content-indent{% if section.settings.hide_mobile %} small--hide{% endif %}">
+  <div class="collection-box sec-{{ section.id}}{% unless section.settings.section_width %} page-width {% else %} full fullwidth-{{section.id}}{% endunless %}" id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="masonary">
+
+   {%- if section.settings.title != blank  or section.settings.subtitle != blank -%}
+    <div class="section-header text-center wow fadeIn">
+      <h2 class="h2">{{ section.settings.title  }}</h2>  
+      {%- if section.settings.subtitle != blank -%}<p>{{section.settings.subtitle}}</p>{%- endif -%}
+   </div>
+  {%- endif -%} 
+    
+    <div class="grid grid-masonary">
+        <div class="grid-sizer-{{section.id}} col-{{section.settings.grid-spacing-col}}"></div>
+        {% for block in section.blocks limit: section.blocks.size %}      
+        	{% case block.settings.width %}
+              {% when '20%' %}{%- assign block_width = 'small--one-whole medium-up--one-fifth' -%}
+              {% when '25%' %}{%- assign block_width = 'small--one-whole medium-up--one-quarter' -%}
+              {% when '33%' %}{%- assign block_width = 'small--one-whole medium-up--one-third' -%}
+              {% when '40%' %}{%- assign block_width = 'small--one-whole medium-up--two-fifths' -%}
+              {% when '50%' %}{%- assign block_width = 'small--one-whole medium-up--one-half' -%}
+              {% when '60%' %}{%- assign block_width = 'small--one-whole medium-up--tree-fifths' -%}
+              {% when '66%' %}{%- assign block_width = 'small--one-whole medium-up--two-thirds' -%}
+              {% when '75%' %}{%- assign block_width = 'small--one-whole medium-up--three-quarters' -%}
+              {% when '80%' %}{%- assign block_width = 'small--one-whole medium-up--four-fifths' -%}
+              {% when '100%' %}{%- assign block_width = 'one-whole' -%}
+            {% endcase %}
+        {% assign product_box = forloop.index | minus:1 %}
+        {% assign delay_time = 50 | times : product_box %}      		
+        <div class="grid__item ms-item {{ block_width }} wow fadeInUp" {{ block.shopify_attributes }} data-wow-delay="{{delay_time}}ms">
+          {%- assign collection = collections[block.settings.collection] -%}
+          {% include 'collection-grid-item-banners' %}
+        </div>
+        {% endfor %}
+      </div>
+    
+    {% if section.blocks.size == 0 %}{% include 'no-blocks' %}{% endif %}
+  </div>
+</div>
+{%- endcapture -%}
+{{collectionBanner | strip_newlines | remove: "  " | remove: "	" }}
+
+<style>
+  .collection-box.sec-{{ section.id}} .grid-item-block { background:{{section.settings.box_bg}}; color:{{section.settings.box_txt}}; }
+</style>
+{% schema %}
+  {
+    "name": "Collection Banner",
+    "class": "index-section",
+    "max_blocks": 15,
+    "settings": [	
+	  {
+		"type":"checkbox",
+		"id":"section_width",
+		"label":"Fullwidth?",
+		"default": false
+	  },
+ 	 {
+           "type": "checkbox",
+           "id": "hide_mobile",
+           "label": "Hide Section in Mobile?",
+           "default": false
+        },	 
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collection Banner"		
+      },
+      {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sub Heading",
+        "default": "Describe your products, collection, content etc..."
+      }, 	  	             	      	 			 	     
+	 {
+        "type": "range",
+        "id": "grid-spacing-col",
+        "label": "Select Column",
+        "default": 2,
+        "min": 2,
+        "max": 5,
+        "step": 1,
+		"info":"[Column Selection guide](https://www.adornthemes.com/masonry-column-selection/). Column number depends on content Column Width"
+      },
+	  {
+        "type": "color",
+        "id": "box_bg",
+        "label":"Grid Text Background",
+        "default": "#fff"
+      },
+     {
+        "type": "color",
+        "id": "box_txt",
+        "label":"Grid Text",
+        "default": "#000"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "featured_collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          },
+		  {
+			"type":"image_picker",
+			"id":"collection_image",
+			"label":"Upload Image"			
+		  },
+		  {
+ 			"type":"textarea",
+			"id":"collection_name",
+			"label":"Text 1",
+			"info":"use <strong>your text here</strong> for bold font"
+		  },		 	 		
+		 {
+ 			"type":"textarea",
+			"id":"collection_name_2",
+			"label":"Text 2",
+			"info":"use <strong>your text here</strong> for bold font"
+		  },
+		 {
+            "type": "select",
+            "id": "text-pos",
+            "label": "Text Position",
+            "default": "bottom",			
+            "options": [
+			  { "value": "bottom", "label": "Bottom" },
+              { "value": "center", "label": "Center" }             
+            ]
+          },
+		  {
+            "type": "select",
+            "id": "text-align",
+            "label": "Text Align",
+            "default": "center",			
+            "options": [
+			  { "value": "left", "label": "Left" },
+              { "value": "center", "label": "Center" }             
+            ]
+          },
+		 {
+            "type": "select",
+            "id": "width",
+            "label": "Column Width",
+            "default": "50%",
+			"info":"Total width of all block must not be more than 100%",
+            "options": [
+			  { "value": "20%", "label": "20%" },
+              { "value": "25%", "label": "25%" },
+              { "value": "33%", "label": "33%" },             
+              { "value": "50%", "label": "50%" },             
+              { "value": "66%", "label": "66%" },                         
+              { "value": "100%", "label": "100%" }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Banners Masonry",
+        "category": "Collection",        
+        "blocks": [
+          {
+            "type": "featured_collection"
+          },
+          {
+            "type": "featured_collection"
+          }          	  
+        ]
+      }
+    ]
+  }
+{% endschema %}

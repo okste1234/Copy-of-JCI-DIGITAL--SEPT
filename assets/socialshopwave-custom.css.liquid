@@ -1,0 +1,96 @@
+#widget-fave-html {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#widget-fave-html .ssw-fave-btn {  /*input textarea*/
+  width: 100%;
+}
+
+#widget-fave-html .ssw-fave-btn-content { /* pages/product/buttonContent(fave button) */
+  width: 100%;
+} 
+
+#widget-fave-html .ssw-fave-btn-counter {
+  background: #000;
+  color: #fff;
+}
+
+#widget-fave-html .ssw-fave-btn-counter:before {
+  background: #000;
+}
+
+@media only screen and (min-width: 476px) {
+  .ssw-fave-item__changelist.ssw-fave-item__changelist--page {
+    display: flex;
+    justify-content: space-around;
+  } 
+}
+
+@media only screen and (max-width: 475px) and (min-width: 419px) {
+  .ssw-fave-item__changelist.ssw-fave-item__changelist--page {
+    height: 67px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+  } 
+}
+
+@media only screen and (max-width: 419px) {
+  .ssw-fave-item__changelist.ssw-fave-item__changelist--page {
+    height: 67px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+  } 
+}
+
+.ssw-fave-item__button-delete.button.btn.gw-btn-bg,
+.ssw-fave-item__button-move.btn-move.button.btn.gw-btn-bg.gw-fsize-sm.gw-wishlist-btn { /* EDIT AND DELETE MOBILE */
+  line-height: 0;
+}
+
+.ssw-fave-item {
+  z-index: unset !important;
+}
+
+.ssw-accept-wrapper label.ssw-accept-marketing, .ssw-accept-wrapper label.ssw-accept-terms {
+  display: block;
+}
+
+.ssw-modal-body {
+  color: #000;
+}
+
+#ssw-fave-side-bar .ssw-fave-item {
+  color: #000;
+}
+
+#ssw-review-widget-content .ssw-text {
+  color: #000;
+}
+
+.ssw-recommend-author a {
+  color: #fff;
+}
+
+#ssw-avg-rate-profile-html {
+  margin-bottom: 10px;
+}
+
+.ssw-photo-layout__tabs_label,
+.ssw-recommend-author.ssw-photo-layout__reviews-user_name,
+.ssw-photo-layout__reviews_review-text {
+  color: #fff;
+}
+
+.ssw-review-slider-widget:before {
+  content: 'Customer Reviews';
+  display: block;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+}

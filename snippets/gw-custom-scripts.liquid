@@ -1,0 +1,18 @@
+{% if template contains 'product' %}
+<script>
+  if (typeof sswRun === 'function') {
+    sswRun(function(){
+      var intervalId = setInterval(function(){
+        if(ssw('#ssw-avg-rate-profile-html').length && ssw('#ssw-widget-recommends-html').length){
+          console.log('+')
+          ssw('#ssw-avg-rate-profile-html').on('click',function() {
+            console.log('222')           
+			ssw('.product-tabs [href="#tab1574078311788"]')[0].click();
+          })
+          clearInterval(intervalId);
+        };                                 
+      },1000);      
+    });
+  }
+</script>
+{% endif %}

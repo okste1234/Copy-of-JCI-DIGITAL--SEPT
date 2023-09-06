@@ -1,0 +1,149 @@
+{% capture themeModels %}
+
+{%- comment -%}****	Site Search **** {%- endcomment -%}
+    <div id="SearchDrawer" class="search-bar">
+      	<button type="button" class="btn--link search-bar__close"><i class="ad ad-times-l"></i><span class="icon__fallback-text">{{ 'general.search.close' | t }}</span></button>
+		<p class="ttl text-center">{{ 'general.search.title' | t }}</p>
+        <form class="search search-bar__form" action="/search" method="get" role="search">
+          <button class="search-bar__submit search__submit btn--link" type="submit"><i class="ad ad-search-l" aria-hidden="true"></i><span class="icon__fallback-text">{{ 'general.search.submit' | t }}</span></button>
+          <input class="search__input search-bar__input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}">
+        </form>
+</div>
+<div id="searchWrapper"></div>
+
+<div class="loadingBox"><img src="{{ 'ajax-loader.gif' | asset_url | split: "?" | first }}" alt="Loading..." /></div>
+<div id="errorDrawer" class="modal errorDrawer">
+	<div class="modal-inner">
+		<div class="error-title">{{ 'cart.general.error' | t}}</div>
+		<div class="error-message"></div>
+	</div>
+</div>
+<div id="successDrawer" class="modal successDrawer"> <a href="javascript:void(0)" class="closeDrawer" title="Close"><i class="ad ad-times" aria-hidden="true"></i></a>
+  <p class="prod-img"><img class="modal-prod-img" alt="&nbsp;" src="" /></p>
+  <div class="prod-detail">
+    <p class="modal-prod-name"></p>
+    <p class="msg cartText">{{ 'cart.general.added_in_cart' | t}}</p>
+    <button class="btn btn-secondary btn--small continue-shopping" onclick="javascript:void(0)">{{ 'cart.general.continue_shopping' | t}}</button>
+    <button class="btn btn-secondary btn--small cartText" onclick="window.location='/cart'">{{ 'cart.general.view_cart' | t}}</button>
+  </div>
+</div>
+<div class="modalOverly"></div>
+
+{%- comment -%}****	Newsletter Popup **** {%- endcomment -%}
+{%- if settings.newsletter_popup -%}
+<div class="newsletter-wrap">
+	<div id="newsletter-modal" data-time="{{settings.newsletter_popup_time}}" data-type="{{settings.nwptype}}">
+		<button type="button" class="btn closepopup">&times;</button>
+		<!-- Modal content-->
+		<div class="display-table">
+          	{% if settings.newsletter_img != blank %}<div class="display-table-cell width40"><img src="{{ settings.newsletter_img | img_url:'300x' }}" alt="" /></div>{% endif %}
+			<div class="display-table-cell{% if settings.newsletter_img != blank %} width60{% endif %} text-center">
+				<div class="newsletter-left">
+					<h2>{{settings.newsletter_popup_title }}</h2>
+					<p>{{settings.newsletter_popup_subtitle }} </p>
+					{% include 'newsletter-form' %}
+                    {%- if settings.show_social_icons -%}{% include 'social-media' %}{%- endif -%}
+                  	<p class="checkboxlink"><input type="checkbox" id="dontshow" /> <label for="dontshow">{{ 'general.newsletter_form.hide_message' | t }}</label></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%- endif -%}
+{% endcapture %}
+{{themeModels | strip_newlines | remove: "  " | remove: "	" }}
+
+{%- comment -%}****	Product Notification **** {%- endcomment -%}
+{%- assign ntCollection = collections[settings.notify_collection] -%}
+
+{%- if settings.show_notification and ntCollection.products.size > 0 -%}
+{%- assign colections = ntCollection.products -%}
+{%- assign randomNumber = "now" | date: "%N" | modulo: colections.size | plus: 0 -%}
+{%- assign fake_location = settings.notify_location | replace: ' | ', '|' | replace: ' |', '|' | replace: '| ', '|' | split: '|' -%}
+{%- assign randomlocation = "now" | date: "%N" | modulo: fake_location.size | plus: 0 -%}
+{%- assign randomTime = "now" | date: "%N" | modulo: 60 | plus: 1 -%}
+	<div id="prodNotify" class="customized{% if settings.hide_notification_mb %} small--hide{% endif %}">
+      	<a class="closeNotify" href="#"><i class="ad ad-times-l" aria-hidden="true"></i></a>
+    	<a href="{{ntCollection.products[randomNumber].url}}" class="imgLink"><img class="pImg" src="{{ntCollection.products[randomNumber] | img_url: 'small'}}" alt="{{ntCollection.products[randomNumber].title}}" /></a>
+		<div class="details">
+        	{%- if settings.notify_msg != blank -%}<p class="msg">{{settings.notify_msg}}</p>{%- endif -%}
+			<p><a href="{{ntCollection.products[randomNumber].url}}" class="pname">{{ntCollection.products[randomNumber].title}}</a></p>
+			{%- if settings.fake_time -%}<p><span class="time">{{randomTime}}</span> {{settings.time_msg}}</p>{%- endif -%}
+			{%- if settings.notify_location != blank -%}<p>{{settings.location_msg}} <span class="location">{{ fake_location[randomlocation] }}</span></p>{%- endif -%}
+		</div>
+	</div>
+{% endif %}
+
+<script>
+$(document).ready(function(){
+  	$(function() {
+        CartJS.init({{ cart | json }}, {
+            "moneyFormat": "{{ shop.money_format }}",
+            "moneyWithCurrencyFormat": "{{ shop.money_with_currency_format }}",
+            "requestBodyClass": "loading"
+        });
+      	{% if settings.show_multiple_currencies %}currenciesChange("#header-cart span.money");{% endif %}
+    });
+    $(document).on('cart.requestComplete', function(event, cart) {
+        {% if settings.show_multiple_currencies %}currenciesChange("#header-cart span.money");{% endif %}
+    });
+	{%- if settings.terms_checkbox -%}
+    	$('#cartDWtearm').change(function(){if(this.checked == true){ $('.cartDWcheckout').removeAttr("disabled"); } else { $('.cartDWcheckout').attr("disabled", "disabled"); }});
+    {%- endif -%}
+	
+	{%- if settings.show_notification and ntCollection.products.size > 0 -%}
+  			if ((typeof Shopify) === 'undefined') { Shopify = {}; } else {
+                Shopify.pnProduct = function(handle, callback) {
+                    $.ajax({ url: '/products/' + handle + '.js', dataType: 'json', success: function(data){ callback(data); }, cache:true, timeout: {{settings.notify_display | plus: settings.notify_delay | plus: 600}} });
+                };
+
+                function productNotify(){
+                    var productsArray = {{ colections | map:'handle' | json }},
+                        curproductIndex = Math.floor((Math.random() * productsArray.length - 1) + 1);
+                    $('#prodNotify').addClass("active");
+                    setTimeout(function(){
+                        Shopify.pnProduct(productsArray[curproductIndex],function(data){
+                            var fakeTimeOrder = Math.floor((Math.random() * 60) + 1),
+                                {%- if settings.notify_location != blank -%}fklocations = {{ fake_location | json }},rand = Math.floor(Math.random() *{{fake_location.size}}),{% endif %}
+                                pimg = data.featured_image,
+                                pimg_path = pimg.replace(/(\.[^\.]*$|$)/, '_small' + '$&');
+                            $('#prodNotify .pname').html(data.title).attr('href','/collections/{{ntCollection.handle}}'+data.url);
+                            $('#prodNotify .imgLink').attr('href','/collections/{{ntCollection.handle}}'+data.url);
+                            $('#prodNotify img').attr( { src:pimg_path, alt:data.title } );
+                            $('#prodNotify .time').html(fakeTimeOrder);
+                            {%- if settings.notify_location != blank -%}$('#prodNotify .location').html(fklocations[rand]);{%- endif -%}
+                            $('#prodNotify').removeClass("active");
+                        });
+                    }, {{settings.notify_display}});
+                }
+                setInterval(productNotify, {{ settings.notify_display | plus: settings.notify_delay | plus: 600}});
+                productNotify();
+			}
+            $('.closeNotify').click(function(){ $('#prodNotify').remove(); });
+	{% endif %}
+
+	{%- if settings.mailChimp_newsletter != blank -%}
+            $(".mcNewsletter").submit(function(e) {
+                  var $form = $(this);
+                  e.preventDefault();
+                  $.ajax({
+                      type: 'GET',
+                      url: $(this).attr('action'),
+                      data: $(this).serialize(),
+                      cache: false,
+                      dataType: 'json',
+                      contentType: "application/json; charset=utf-8",
+                      error: function(err) { alert("Could not connect to the registration server. Please try again later."); },
+                      success: function(data) {
+                          if (data.result == "success"){
+                              $($form).find(".form--success").html(data.msg).show();
+                              $($form).find(".errors").hide();
+                          } else {
+                              $($form).find(".errors").html(data.msg).show();
+                          }
+                      }
+                  });
+            });
+    {%- endif -%} 
+});
+</script>

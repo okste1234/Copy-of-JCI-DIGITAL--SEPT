@@ -1,0 +1,70 @@
+<div class="top-bar {% if section.settings.topbarmobile %}small--hide{% endif %}">
+	<div class="store-features">
+	<div class="page-width">
+        <div class="flex top-info-bar">
+            {% for block in section.blocks limit: section.blocks.size %}
+            <div class="flex-item" {{ block.shopify_attributes }}>
+              {% if block.settings.title %}
+                {% if block.settings.url != blank %} <a href="{{ block.settings.url}}"> {% endif %}
+                  {% if block.settings.image %} <img src="{{block.settings.image | img_url: 'master' }}" alt="" />{% endif %}{{ block.settings.title}}
+                 {% if block.settings.url != blank %}</a>{% endif %}
+              {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if section.blocks.size == 0 %}{% include 'no-blocks' %}{% endif %}
+	</div>
+</div>
+</div>
+{% schema %}
+  {
+    "name": "Top Information Bar",
+    "class": "index-section",   
+	"max_blocks": 4,
+	"settings":[
+		{ 
+		"type":"paragraph",
+		"content":"Change Colors from Theme Settings => Colors => Top Information Bar"
+	    },		
+		{ 
+		"type":"checkbox",
+		"id":"topbarmobile",
+		"label":"Hide in Mobile?",
+		"default":true,
+		"info":"Hide this option for mobile view"
+	    } 
+	],
+    "blocks": [
+      {
+        "type": "text_block",
+        "name": "Column",
+        "settings": [         
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Upload Image"			
+		  }, 		 
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Add a title or tagline"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "URL"           
+          }         
+         
+        ]
+      }
+    ]    
+  }
+{% endschema %} 
+
+<style>	
+    {%- if settings.classic_header %}
+  		.template-index #shopify-section-top-information-bar {display:none;}
+    {%- endif -%}
+  
+</style>

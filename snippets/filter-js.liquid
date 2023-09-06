@@ -1,0 +1,46 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		check_filters = (function(){
+			$('.filters .sidebar_widget').each(function(){
+            	var filter = $(this).find("li");
+            	if(filter.length <= 0){
+                	$(this).hide();
+             	}
+          	});
+		  	$('.sidebar_tags input:checkbox').on( "change", function(){
+                var productFilters = $('.sidebar_tags input:checkbox'), 
+                    newTags = [],
+                    url = '';
+
+                productFilters.each(function() {
+                    if ($(this).val() && $(this).is(":checked") == true) {
+                        newTags.push($(this).val());
+                    }
+                });
+
+                if (newTags.length) {
+                    var query = newTags.join('+');
+                    var t = '{{ 'tag' | link_to_tag: 'tag' }}';
+                    url += $(t).attr('href').replace('tag', query);
+                } else {
+                    {% if collection.handle %}
+                        {% if collection.url contains "vendors?" %}
+                  			url += '{{ collection.title | url_for_vendor }}';
+                        {% elsif collection.url contains "types?" %}
+                            url += '{{ collection.title | url_for_type }}';
+                  		{% else %}
+                            url += '/collections/{{ collection.handle }}'+window.location.search;
+                  		{% endif %}
+                    {% elsif collection.products.first.type == collection.title %}
+                        url += '{{ collection.title | url_for_type }}'+window.location.search;
+                    {% elsif collection.products.first.vendor == collection.title %}
+                        url += '{{ collection.title | url_for_vendor }}'+window.location.search;
+                    {% endif %}
+                }
+              	
+          		ajaxfilter(url);
+            });
+	  	});
+    	check_filters();
+	});
+</script>

@@ -1,0 +1,14 @@
+<!--Start Weglot Script-->
+<script src="//cdn.weglot.com/weglot.min.js"></script>
+<script id="has-script-tags">
+  Weglot.initialize({ api_key:"wg_92b29e31a5e2f9001c2931d74303185f4" });
+  Weglot.on("languageChanged", function(newLang, prevLang) { $(".language-picker .ttl").text(Weglot.getLanguageName(newLang)); });
+  Weglot.on("switchersReady", function(initialLanguage) { $(".language-picker .ttl").text(Weglot.getLanguageName(initialLanguage)); });
+  $(document).ready(function() {
+   	$(".language-picker .ttl").click(function() { $("#language").slideToggle(); });
+	$("#language li a").click(function(){
+      	if($(window).width()>999) { $("#language").slideUp(); }
+	});
+  });
+</script>
+<!--End Weglot Script-->

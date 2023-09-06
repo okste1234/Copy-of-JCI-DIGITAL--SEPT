@@ -1,0 +1,41 @@
+{% assign wholesale_country_iso_code = 'AU' %}
+{% form 'localization' %}
+  <select class="jci-country-code" name="country_code">
+    {% if customer and customer.tags contains 'wholesale' and localization.country.iso_code != wholesale_country_iso_code %}
+      <option value="{{ localization.contry.iso_code }}" selected="selected">
+        {{ localization.country.name }} ({{ localization.country.currency.iso_code }}) 
+      </option>
+    {% endif %}
+    {% for country in localization.available_countries %}
+      {% if customer and customer.tags contains 'wholesale' and country.iso_code != wholesale_country_iso_code %}
+      {% else %}
+        <option value="{{ country.iso_code }}" {%- if country == localization.country %} selected="selected"{% endif -%}>
+          {{ country.name }} ({{ country.currency.iso_code }}) 
+        </option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  <input style="display: none;" type="submit" value="Update">
+{% endform %}
+<script>
+  (function() {
+    console.log(document.querySelector('.jci-country-code[name=country_code]'));
+    document.querySelectorAll('.jci-country-code[name=country_code]').forEach(function(el) {
+      if (!el.dataset.hasJciListener) {
+        el.addEventListener('change', function(ev) {
+          ev.currentTarget.closest('form').submit();
+        });
+        el.dataset.hasJciListener = true;
+      }
+    });
+    
+    {% if customer and customer.tags contains 'wholesale' %}
+      {% if localization.country.iso_code != wholesale_country_iso_code %}
+        var countryCodeSelect = document.querySelector('#localization_form select.jci-country-code');
+        countryCodeSelect.value = "{{ wholesale_country_iso_code }}";
+        countryCodeSelect.dispatchEvent(new Event('change'));
+        console.log('heresdfasdfas');
+      {% endif %}      
+    {% endif %}
+  })();
+</script>

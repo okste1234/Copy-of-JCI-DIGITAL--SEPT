@@ -1,0 +1,38 @@
+<!-- breadcrumb -->
+{% if settings.dis_br_webpage %}
+	{% include 'breadcrumb' %}
+{% else %}
+	<div class="top-space"></div>
+{% endif %}
+
+{%- assign new_comment = false -%}
+{% if comment and comment.created_at %}
+  {%- assign new_comment = true -%}
+  {%- assign new_comment_id = comment.id -%}
+{% endif %}
+
+{% if new_comment %}
+  {%- assign duplicate_comment = false %}
+  {% for comment in article.comments %}
+    {% if comment.id == new_comment_id %}
+      {%- assign duplicate_comment = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if duplicate_comment %}
+    {%- assign number_of_comments = article.comments_count -%}
+  {% else %}
+    {%- assign number_of_comments = article.comments_count | plus: 1 -%}
+  {% endif %}
+{% else %}
+  {%- assign number_of_comments = article.comments_count -%}
+{% endif %}
+
+<article class="page-width" itemscope itemtype="http://schema.org/Article">
+	<div class="grid">{% section 'article-template' %}</div>
+</article>
+
+<div class="text-center return-link-wrapper">
+	<a href="{{ blog.url }}" class="btn btn--secondary btn--has-icon-before return-link"><i class="ad ad-chevron-circle-left"></i> {{ 'blogs.article.back_to_blog' | t: title: blog.title }}</a>
+</div>
