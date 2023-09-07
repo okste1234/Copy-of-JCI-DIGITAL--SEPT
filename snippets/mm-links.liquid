@@ -5,7 +5,7 @@
     {% when 5 %}{%- assign column = 'large-up--one-fifth' -%}
     {% when 6 %}{%- assign column = 'large-up--one-sixth' -%}
 {%- endcase -%}
-<li class="grid__item lvl-1 {{ column }}{% if link.active or link.child_active %} active{% endif %}">
+<li class="lvl-1 grid__item  {{ column }}{% if link.active or link.child_active %} active{% endif %}">
   	{%- assign label1 = link.title |  split: '[label' | last  | split: ']' | first | prepend: "nm_label" -%}
 	<a href="{{ link.url }}" class="site-nav lvl-1">{{ link.title | split: '[label' | first }}{% if link.title contains '[label' %}<span class="lbl {{label1}}">{{ section.settings[label1] }}</span>{% endif %}</a>
     {%- if link.links != blank -%}
