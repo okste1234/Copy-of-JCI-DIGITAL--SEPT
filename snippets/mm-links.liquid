@@ -7,7 +7,7 @@
 {%- endcase -%}
 <li class="lvl-1 grid__item  {{ column }}{% if link.active or link.child_active %} active{% endif %}">
   	{%- assign label1 = link.title |  split: '[label' | last  | split: ']' | first | prepend: "nm_label" -%}
-	<a href="{{ link.url }}" class="site-nav lvl-1 active">{{ link.title | split: '[label' | first }}{% if link.title contains '[label' %}<span class="lbl {{label1}}">{{ section.settings[label1] }}</span>{% endif %}</a>
+	<a href="{{ link.url }}" class="site-nav lvl-1 {{ column }}{% if link.active or link.child_active %} active{% endif %}">{{ link.title | split: '[label' | first }}{% if link.title contains '[label' %}<span class="lbl {{label1}}">{{ section.settings[label1] }}</span>{% endif %}</a>
     {%- if link.links != blank -%}
     <ul class="subLink">
 		{%- for childlink in link.links -%}
