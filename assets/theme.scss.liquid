@@ -5361,7 +5361,7 @@ h1.product-single__title { color:{{ settings.color_product_title}}; font-size:23
 @include media-query($large-up){
   #siteNav { position:relative;
     a { text-decoration:none; font-size:{{settings.nav_size}}px; display:block; opacity:1; -webkit-font-smoothing:antialiased; letter-spacing:0.05em; position:relative; 
-		.lbl { color:{{ settings.nav_link_lbl}}; font-size:10px; font-weight:900; letter-spacing:0; line-height:1; text-transform:uppercase; display:inline-block; padding:2px 4px;
+		.lbl { color:{{ settings.nav_link_lbl}}; font-size:10px; font-weight:400; letter-spacing:0; line-height:1; text-transform:uppercase; display:inline-block; padding:2px 4px;
 			border-radius:3px; background-color:#f00; box-shadow:0 0 3px rgba(0,0,0,0.3); position:relative; vertical-align:middle;
          	&:after { content:" "; display: block; width:0; height:0; position:absolute; bottom:3px; left:-7px; border: 4px solid transparent; border-right-color:#f00; }
           	&.nm_label1 { background-color:{{settings.nav_link_lbl1}}; 
@@ -5413,7 +5413,8 @@ h1.product-single__title { color:{{ settings.color_product_title}}; font-size:23
         
         li.lvl-1 { margin-bottom:25px;
           a.lvl-1 { color:{{ settings.nav_mm_title }}; font-size:{{settings.nav_ttl}}px; text-transform:{{settings.nav_case}}; padding:0 0 8px; font-weight:600;
-                &:hover { color:{{ settings.nav_mm_link_hv }};}
+                &:hover { color:{{ settings.nav_mm_link_hv }};
+                &:active {font-size: 20px; font-weight: 700;}}
             img {margin-bottom:10px;}
             .title { display:block; }
           }
